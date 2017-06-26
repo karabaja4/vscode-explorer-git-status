@@ -1,7 +1,7 @@
 # vscode-explorer-git-status
 Color highlight git added, modified and ignored files inside Visual Studio File Explorer.
 
-New files are displayed in ![#32CD32](https://placehold.it/15/32CD32/000000?text=+) green.
+New files are displayed in ![#32CD32] green.
 
 Modified files are displayed in orange.
 Ignored files are displayed in gray.
