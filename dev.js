@@ -34,9 +34,19 @@ function injectGitFileStatus()
                             // run git status
                             const command = "git status --short --ignored";
 
+                            const resolveHome = (filepath) =>
+                            {
+                                if (filepath[0] === "~")
+                                {
+                                    return path.join(process.env.HOME, filepath.slice(1));
+                                }
+
+                                return filepath;
+                            }
+
                             const options =
                             {
-                                cwd: gitRoot
+                                cwd: resolveHome(gitRoot)
                             };
 
                             const callback = (error, stdout, stderr) =>
@@ -76,7 +86,7 @@ function injectGitFileStatus()
                                         html += `${classPath}[title$="${deletedFile}" i]{opacity:${ignoredOpacity};}`
                                     });
 
-                                    if (style.innerHTML != html)
+                                    if (style.innerHTML !== html)
                                     {
                                         style.innerHTML = html;
                                     }
