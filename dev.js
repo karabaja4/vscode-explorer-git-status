@@ -36,7 +36,7 @@ function injectGitFileStatus()
 
                             const options =
                             {
-                            cwd: gitRoot
+                                cwd: gitRoot
                             };
 
                             const callback = (error, stdout, stderr) =>
