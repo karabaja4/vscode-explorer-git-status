@@ -1,7 +1,13 @@
 # vscode-explorer-git-status
 Color highlight git added, modified and ignored files inside Visual Studio File Explorer.
 
-![alt text](https://karabaja4.blob.core.windows.net/public/gitstatus.png)
+- New files are displayed in ![#32CD32](https://placehold.it/15/32CD32/000000?text=+) green.
+- Modified files are displayed in ![#FF8C00](https://placehold.it/15/FF8C00/000000?text=+) orange.
+- Ignored files are displayed in ![#DCDCDC](https://placehold.it/15/DCDCDC/000000?text=+) gray.
+
+![alt text](https://karabaja4.blob.core.windows.net/public/gitstatus2.png)
+
+You can modify the colors inside the source code and reminify `dist.min.js`.
 
 # About
 
