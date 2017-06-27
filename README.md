@@ -13,15 +13,15 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 
 # Installation
 
-Open:
+> Open the following file:
+>
+> `{VS Code directory}\resources\app\out\vs\workbench\electron-browser\workbench.main.js`
+>
+> as an administrator (or root) in your favorite text editor (make sure to make a backup of this file beforehand).
+>
+> Copy the code from `dist.min.js` to the end of the file and restart Visual Studio Code. Done!
 
-`{VS Code directory}\resources\app\out\vs\workbench\electron-browser\workbench.main.js`
-
-as an administrator in your favorite text editor (make sure to make a backup of this file beforehand).
-
-Copy the code from `dist.min.js` to the end of the file and restart Visual Studio Code. Done!
-
-You will need to do this on every Visual Studio Code update as `workbench.main.js` will be replaced with a newer version.
+You will need to repeat this process on every Visual Studio Code update as `workbench.main.js` will be replaced with a newer version.
 
 After installation you will get a warning that your Visual Studio Code installation is corrupt:
 
