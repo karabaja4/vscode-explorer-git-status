@@ -1,5 +1,5 @@
 # vscode-explorer-git-status
-Highlighting of git added, modified and ignored files inside Visual Studio File Explorer (similar to Atom).
+Highlighting of git added, modified and ignored files inside Visual Studio Code File Explorer (similar to Atom).
 
 Screenshot:
 
