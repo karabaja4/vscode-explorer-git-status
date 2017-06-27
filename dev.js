@@ -55,10 +55,6 @@ function injectGitFileStatus()
                                 {
                                     const files = stdout.split("\n");
 
-                                    const addedSymbol = "?? ";
-                                    const modifiedSymbol = " M ";
-                                    const deletedSymbol = "!! ";
-
                                     const normalize = (name) =>
                                     {
                                         return path.normalize(name.substr(3)).replace(/\\+$/, "").replace(/\/+$/, "").replace(/\\/g, "\\\\");
