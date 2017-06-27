@@ -18,7 +18,8 @@ Open the following file:
 `{VS Code directory}\resources\app\out\vs\workbench\electron-browser\workbench.main.js`
 
 as an administrator (or root) in your favorite text editor (make sure to make a backup of this file beforehand).
-Copy the code from `dist.min.js` to the end of the file and restart Visual Studio Code. Done!
+
+Copy the code from `dist.min.js` to the **end of the file** and restart Visual Studio Code. Done!
 
 You will need to repeat this process on every Visual Studio Code update as `workbench.main.js` will be replaced with a newer version.
 
