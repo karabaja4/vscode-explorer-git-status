@@ -3,7 +3,7 @@ Color highlight git added, modified and ignored files inside Visual Studio File 
 
 ![alt text](https://karabaja4.blob.core.windows.net/public/gitstatus2.png)
 
-You can modify the colors inside the source code `dist.min.js`.
+You can modify the colors inside the `dist.min.js` source, or modify them in dev.js and reminify the file.
 
 # About
 
