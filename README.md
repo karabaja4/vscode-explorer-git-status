@@ -25,7 +25,7 @@ You will need to repeat this process on every Visual Studio Code update as `work
 
 After installation you will get a warning that your Visual Studio Code installation is corrupt:
 
-![alt text](https://karabaja4.blob.core.windows.net/public/reinstall.jpg)
+![alt text](https://karabaja4.blob.core.windows.net/public/corrupted.png)
 
 This is because Visual Studio Code does a background check to detect if the installation has been changed on disk, and displays a warning if it detects any third party modifications. You can permanently hide this warning by clicking `Don't show again`.
 
