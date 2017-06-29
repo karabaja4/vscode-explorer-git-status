@@ -80,7 +80,7 @@ function injectGitFileStatus()
                                             const modified = files.filter(name => { return name.startsWith(" M "); }).map(name => { return normalizePath(name); });
                                             const deleted = files.filter(name => { return name.startsWith("!! "); }).map(name => { return normalizePath(name); });
 
-                                            let html = "";
+                                            let html = ".monaco-tree-row{cursor:default!important;}";
                                             const classPath = "#workbench\\.view\\.explorer .explorer-folders-view .monaco-tree .monaco-tree-rows .monaco-tree-row .explorer-item";
                                             
                                             const addedFolders = new Set();
