@@ -70,6 +70,14 @@ function injectGitFileStatus()
                                         return paths;
                                     };
 
+                                    const classPath = "#workbench\\.view\\.explorer .explorer-folders-view .monaco-tree .monaco-tree-rows .monaco-tree-row .explorer-item";
+
+                                    const getCssEntry = (file, cssEntry) =>
+                                    {
+                                        const filepath = path.join(gitRoot, file).replace(/\\/g, "\\\\");
+                                        return `${classPath}[title="${filepath}" i]{${cssEntry};}`;
+                                    }
+
                                     const gitStatusCallback = (error, stdout, stderr) =>
                                     {
                                         if (!error)
@@ -78,11 +86,10 @@ function injectGitFileStatus()
 
                                             const added = files.filter(name => { return name.startsWith("?? "); }).map(name => { return normalizePath(name); });
                                             const modified = files.filter(name => { return name.startsWith(" M "); }).map(name => { return normalizePath(name); });
-                                            const deleted = files.filter(name => { return name.startsWith("!! "); }).map(name => { return normalizePath(name); });
+                                            const ignored = files.filter(name => { return name.startsWith("!! "); }).map(name => { return normalizePath(name); });
 
-                                            let html = ".monaco-tree-row,.monaco-list-row{cursor:default!important;}";
-                                            const classPath = "#workbench\\.view\\.explorer .explorer-folders-view .monaco-tree .monaco-tree-rows .monaco-tree-row .explorer-item";
-                                            
+                                            let html = "";
+    
                                             const addedFolders = new Set();
                                             const modifiedFolders = new Set();
 
@@ -95,7 +102,7 @@ function injectGitFileStatus()
                                                     addedFolders.add(subdirectory);
                                                 });
 
-                                                html += `${classPath}[title$="${addedFile}" i]{color:${addedColor};}`
+                                                html += getCssEntry(addedFile, `color:${addedColor};`);
                                             });
 
                                             modified.forEach(modifiedFile =>
@@ -106,23 +113,23 @@ function injectGitFileStatus()
                                                     modifiedFolders.add(subdirectory);
                                                 });
 
-                                                html += `${classPath}[title$="${modifiedFile}" i]{color:${modifiedColor};}`
+                                                html += getCssEntry(modifiedFile, `color:${modifiedColor};`);
                                             });
 
-                                            deleted.forEach(deletedFile =>
+                                            ignored.forEach(ignoredFile =>
                                             {
-                                                html += `${classPath}[title$="${deletedFile}" i]{opacity:${ignoredOpacity};}`
+                                                html += getCssEntry(ignoredFile, `opacity:${ignoredOpacity};`);
                                             });
 
                                             // folders
                                             addedFolders.forEach((addedFolder) =>
                                             {
-                                                html += `${classPath}[title$="${addedFolder}" i]{color:${addedColor};}`
+                                                html += getCssEntry(addedFolder, `color:${addedColor};`);
                                             });
 
                                             modifiedFolders.forEach((modifiedFolder) =>
                                             {
-                                                html += `${classPath}[title$="${modifiedFolder}" i]{color:${modifiedColor};}`
+                                                html += getCssEntry(modifiedFolder, `color:${modifiedColor};`);
                                             });
 
                                             if (style.innerHTML !== html)
