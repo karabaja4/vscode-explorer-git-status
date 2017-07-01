@@ -102,7 +102,7 @@ function injectGitFileStatus()
                                             const modified = files.filter(name => { return name.startsWith(" M "); }).map(name => { return normalizePath(name); });
                                             const ignored = files.filter(name => { return name.startsWith("!! "); }).map(name => { return normalizePath(name); });
 
-                                            let html = "";
+                                            let html = ".monaco-tree-row,.monaco-list-row{cursor:default!important;}";
     
                                             const addedFolders = new Set();
                                             const modifiedFolders = new Set();
