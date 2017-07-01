@@ -50,6 +50,33 @@ function injectGitFileStatus()
                             }
                         }
 
+                        const normalizePath = (name) =>
+                        {
+                            return path.normalize(name.substr(3)).replace(/\\+$/, "").replace(/\/+$/, "").replace(/\\/g, "\\\\");
+                        };
+                        
+                        const getAllSubdirectories = (name) =>
+                        {
+                            let i = 1;
+                            const paths = [];
+                            const sep = path.sep.replace(/\\/g, "\\\\");
+
+                            while (i = name.indexOf(sep, i) + 1)
+                            {
+                                paths.push(name.substr(0, i - 1));
+                            }
+
+                            return paths;
+                        };
+
+                        const classPath = "#workbench\\.view\\.explorer .explorer-folders-view .monaco-tree .monaco-tree-rows .monaco-tree-row .explorer-item";
+
+                        const getCssEntry = (root, file, cssEntry) =>
+                        {
+                            const filepath = unresolveHome(path.join(root, file).replace(/\\/g, "\\\\"));
+                            return `${classPath}[title="${filepath}" i]{${cssEntry}}`;
+                        }
+
                         const firstFileDir = path.normalize(path.dirname(explorerItem.getAttribute("title")));
 
                         const gitRootCommand = "git rev-parse --show-toplevel";
@@ -64,34 +91,6 @@ function injectGitFileStatus()
                                     // run git status
                                     const gitStatusCommand = "git status --short --ignored";
                                     const gitStatusOptions = { cwd: resolveHome(gitRoot) }
-
-                                    const normalizePath = (name) =>
-                                    {
-                                        return path.normalize(name.substr(3)).replace(/\\+$/, "").replace(/\/+$/, "").replace(/\\/g, "\\\\");
-                                    };
-                                    
-                                    const getAllSubdirectories = (name) =>
-                                    {
-                                        let i = 1;
-                                        const paths = [];
-                                        const sep = path.sep.replace(/\\/g, "\\\\");
-
-                                        while (i = name.indexOf(sep, i) + 1)
-                                        {
-                                            paths.push(name.substr(0, i - 1));
-                                        }
-
-                                        return paths;
-                                    };
-
-                                    const classPath = "#workbench\\.view\\.explorer .explorer-folders-view .monaco-tree .monaco-tree-rows .monaco-tree-row .explorer-item";
-
-                                    const getCssEntry = (file, cssEntry) =>
-                                    {
-                                        const filepath = unresolveHome(path.join(gitRoot, file).replace(/\\/g, "\\\\"));
-                                        return `${classPath}[title="${filepath}" i]{${cssEntry}}`;
-                                    }
-
                                     const gitStatusCallback = (error, stdout, stderr) =>
                                     {
                                         if (!error)
@@ -102,7 +101,7 @@ function injectGitFileStatus()
                                             const modified = files.filter(name => { return name.startsWith(" M "); }).map(name => { return normalizePath(name); });
                                             const ignored = files.filter(name => { return name.startsWith("!! "); }).map(name => { return normalizePath(name); });
 
-                                            let html = ".monaco-tree-row,.monaco-list-row{cursor:default!important;}";
+                                            let html = "";
     
                                             const addedFolders = new Set();
                                             const modifiedFolders = new Set();
@@ -116,7 +115,7 @@ function injectGitFileStatus()
                                                     addedFolders.add(subdirectory);
                                                 });
 
-                                                html += getCssEntry(addedFile, `color:${addedColor};`);
+                                                html += getCssEntry(gitRoot, addedFile, `color:${addedColor};`);
                                             });
 
                                             modified.forEach(modifiedFile =>
@@ -127,23 +126,23 @@ function injectGitFileStatus()
                                                     modifiedFolders.add(subdirectory);
                                                 });
 
-                                                html += getCssEntry(modifiedFile, `color:${modifiedColor};`);
+                                                html += getCssEntry(gitRoot, modifiedFile, `color:${modifiedColor};`);
                                             });
 
                                             ignored.forEach(ignoredFile =>
                                             {
-                                                html += getCssEntry(ignoredFile, `opacity:${ignoredOpacity};`);
+                                                html += getCssEntry(gitRoot, ignoredFile, `opacity:${ignoredOpacity};`);
                                             });
 
                                             // folders
                                             addedFolders.forEach((addedFolder) =>
                                             {
-                                                html += getCssEntry(addedFolder, `color:${addedColor};`);
+                                                html += getCssEntry(gitRoot, addedFolder, `color:${addedColor};`);
                                             });
 
                                             modifiedFolders.forEach((modifiedFolder) =>
                                             {
-                                                html += getCssEntry(modifiedFolder, `color:${modifiedColor};`);
+                                                html += getCssEntry(gitRoot, modifiedFolder, `color:${modifiedColor};`);
                                             });
 
                                             if (style.innerHTML !== html)
