@@ -36,6 +36,20 @@ function injectGitFileStatus()
                             return filepath;
                         }
 
+                        const unresolveHome = (filepath) =>
+                        {
+                            const home = process.env.HOME;
+                            if (home && filepath.startsWith(home))
+                            {
+                                var regex = new RegExp(`^${home}`);
+                                return filepath.replace(regex, "~");
+                            }
+                            else
+                            {
+                                return filepath;
+                            }
+                        }
+
                         const firstFileDir = path.normalize(path.dirname(explorerItem.getAttribute("title")));
 
                         const gitRootCommand = "git rev-parse --show-toplevel";
@@ -74,8 +88,8 @@ function injectGitFileStatus()
 
                                     const getCssEntry = (file, cssEntry) =>
                                     {
-                                        const filepath = path.join(gitRoot, file).replace(/\\/g, "\\\\");
-                                        return `${classPath}[title="${filepath}" i]{${cssEntry};}`;
+                                        const filepath = unresolveHome(path.join(gitRoot, file).replace(/\\/g, "\\\\"));
+                                        return `${classPath}[title="${filepath}" i]{${cssEntry}}`;
                                     }
 
                                     const gitStatusCallback = (error, stdout, stderr) =>
