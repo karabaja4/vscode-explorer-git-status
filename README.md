@@ -8,9 +8,9 @@ Screenshot:
 You can modify the colors inside the `dist.min.js` source, or modify them in `dev.js` and reminify the file.
 
 # Change Log
-* v0.1 Fixed a bug where plugin would not load when reopening the project.
-* v0.2 Added highlighting of parent directories of modified files (as Atom does).
-* v0.3 File matching is now done using full file or directory path. Before this change the directory was highlighted if it had the same name as another changed directory.
+* 1. Fixed a bug where plugin would not load when reopening the project.
+* 2. Added highlighting of parent directories of modified files (as Atom does).
+* 3. File matching is now done using full file or directory path. Before this change the directory was highlighted if it had the same name as another changed directory.
 
 # About
 
