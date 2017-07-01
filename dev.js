@@ -41,7 +41,7 @@ function injectGitFileStatus()
                             const home = process.env.HOME;
                             if (home && filepath.startsWith(home))
                             {
-                                var regex = new RegExp(`^${home}`);
+                                const regex = new RegExp(`^${home}`);
                                 return filepath.replace(regex, "~");
                             }
                             else
