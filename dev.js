@@ -1,8 +1,8 @@
 function injectGitFileStatus()
 {
     const timeout = 5000;
-    const addedColor = "limegreen";
-    const modifiedColor = "darkorange";
+    const addedColor = "#98C379";
+    const modifiedColor = "#D19A66";
     const ignoredOpacity = "0.4";
 
     const explorer = document.getElementById("workbench.view.explorer");
@@ -145,13 +145,44 @@ function injectGitFileStatus()
                                                 html += getCssEntry(gitRoot, modifiedFolder, `color:${modifiedColor};`);
                                             });
 
-                                            if (style.innerHTML !== html)
+                                            // run git status
+                                            const gitStatusCommand1 = "git ls-files --others --exclude-standard";
+                                            const gitStatusOptions1 = { cwd: resolveHome(gitRoot) }
+                                            const gitStatusCallback1 = (error, stdout, stderr) =>
                                             {
-                                                style.innerHTML = html;
-                                            }
-                                        }
+                                                if (!error)
+                                                {
+                                                    const added = stdout.split("\n");
 
-                                        setTimeout(startGitStatusChecks, timeout);
+                                                    // files
+                                                    added.forEach(addedFile =>
+                                                    {
+                                                        const subdirectories = getAllSubdirectories(addedFile);
+                                                        subdirectories.forEach(subdirectory =>
+                                                        {
+                                                            addedFolders.add(subdirectory);
+                                                        });
+
+                                                        html += getCssEntry(gitRoot, addedFile, `color:${addedColor};`);
+                                                    });
+
+                                                    // folders
+                                                    addedFolders.forEach((addedFolder) =>
+                                                    {
+                                                        html += getCssEntry(gitRoot, addedFolder, `color:${addedColor};`);
+                                                    });
+
+                                                    if (style.innerHTML !== html)
+                                                    {
+                                                        style.innerHTML = html;
+                                                    }
+                                                }
+
+                                                setTimeout(startGitStatusChecks, timeout);
+                                            }
+
+                                            exec(gitStatusCommand1, gitStatusOptions1, gitStatusCallback1);
+                                        }
                                     }
 
                                     exec(gitStatusCommand, gitStatusOptions, gitStatusCallback);
