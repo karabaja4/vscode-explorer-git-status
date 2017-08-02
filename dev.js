@@ -52,7 +52,12 @@ function injectGitFileStatus()
 
                         const normalizePath = (name) =>
                         {
-                            return path.normalize(name.substr(3)).replace(/\\+$/, "").replace(/\/+$/, "").replace(/\\/g, "\\\\");
+                            return normalizePathClean(name.substr(3));
+                        };
+                        
+                        const normalizePathClean = (name) =>
+                        {
+                            return path.normalize(name).replace(/\\+$/, "").replace(/\/+$/, "").replace(/\\/g, "\\\\");
                         };
                         
                         const getAllSubdirectories = (name) =>
@@ -97,9 +102,10 @@ function injectGitFileStatus()
                                         {
                                             const files = stdout.split("\n");
 
-                                            const added = files.filter(name => { return name.startsWith("?? "); }).map(name => { return normalizePath(name); });
-                                            const modified = files.filter(name => { return name.startsWith(" M "); }).map(name => { return normalizePath(name); });
+                                            const added = files.filter(name => { return name.startsWith("?? ") || name.startsWith("A  "); }).map(name => { return normalizePath(name); });
+                                            const modified = files.filter(name => { return name.startsWith(" M ") || name.startsWith("M  "); }).map(name => { return normalizePath(name); });
                                             const ignored = files.filter(name => { return name.startsWith("!! "); }).map(name => { return normalizePath(name); });
+                                            const renamed = files.filter(name => { return name.startsWith("R  "); }).map(name => { return normalizePathClean(name.split(" -> ")[1]); });
 
                                             let html = "";
     
@@ -107,7 +113,7 @@ function injectGitFileStatus()
                                             const modifiedFolders = new Set();
 
                                             // files
-                                            added.forEach(addedFile =>
+                                            added.concat(renamed).forEach(addedFile =>
                                             {
                                                 const subdirectories = getAllSubdirectories(addedFile);
                                                 subdirectories.forEach(subdirectory =>
