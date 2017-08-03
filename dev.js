@@ -1,8 +1,8 @@
 function injectGitFileStatus()
 {
     const timeout = 5000;
-    const addedColor = "limegreen";
-    const modifiedColor = "darkorange";
+    const addedColor = "#98C379";
+    const modifiedColor = "#D19A66";
     const ignoredOpacity = "0.4";
 
     const explorer = document.getElementById("workbench.view.explorer");
@@ -52,7 +52,12 @@ function injectGitFileStatus()
 
                         const normalizePath = (name) =>
                         {
-                            return path.normalize(name.substr(3)).replace(/\\+$/, "").replace(/\/+$/, "").replace(/\\/g, "\\\\");
+                            return normalizePathClean(name.substr(3));
+                        };
+                        
+                        const normalizePathClean = (name) =>
+                        {
+                            return path.normalize(name).replace(/\\+$/, "").replace(/\/+$/, "").replace(/\\/g, "\\\\");
                         };
                         
                         const getAllSubdirectories = (name) =>
@@ -97,9 +102,10 @@ function injectGitFileStatus()
                                         {
                                             const files = stdout.split("\n");
 
-                                            const added = files.filter(name => { return name.startsWith("?? "); }).map(name => { return normalizePath(name); });
-                                            const modified = files.filter(name => { return name.startsWith(" M "); }).map(name => { return normalizePath(name); });
+                                            const added = files.filter(name => { return name.startsWith("?? ") || name.startsWith("A  ") || name.startsWith("AM "); }).map(name => { return normalizePath(name); });
+                                            const modified = files.filter(name => { return name.startsWith(" M ") || name.startsWith("M  "); }).map(name => { return normalizePath(name); });
                                             const ignored = files.filter(name => { return name.startsWith("!! "); }).map(name => { return normalizePath(name); });
+                                            const renamed = files.filter(name => { return name.startsWith("R  "); }).map(name => { return normalizePathClean(name.split(" -> ")[1]); });
 
                                             let html = "";
     
@@ -107,7 +113,7 @@ function injectGitFileStatus()
                                             const modifiedFolders = new Set();
 
                                             // files
-                                            added.forEach(addedFile =>
+                                            added.concat(renamed).forEach(addedFile =>
                                             {
                                                 const subdirectories = getAllSubdirectories(addedFile);
                                                 subdirectories.forEach(subdirectory =>
@@ -145,13 +151,44 @@ function injectGitFileStatus()
                                                 html += getCssEntry(gitRoot, modifiedFolder, `color:${modifiedColor};`);
                                             });
 
-                                            if (style.innerHTML !== html)
+                                            // run git status
+                                            const gitStatusCommand1 = "git ls-files --others --exclude-standard";
+                                            const gitStatusOptions1 = { cwd: resolveHome(gitRoot) }
+                                            const gitStatusCallback1 = (error, stdout, stderr) =>
                                             {
-                                                style.innerHTML = html;
-                                            }
-                                        }
+                                                if (!error)
+                                                {
+                                                    const added = stdout.split("\n");
 
-                                        setTimeout(startGitStatusChecks, timeout);
+                                                    // files
+                                                    added.forEach(addedFile =>
+                                                    {
+                                                        const subdirectories = getAllSubdirectories(addedFile);
+                                                        subdirectories.forEach(subdirectory =>
+                                                        {
+                                                            addedFolders.add(subdirectory);
+                                                        });
+
+                                                        html += getCssEntry(gitRoot, addedFile, `color:${addedColor};`);
+                                                    });
+
+                                                    // folders
+                                                    addedFolders.forEach((addedFolder) =>
+                                                    {
+                                                        html += getCssEntry(gitRoot, addedFolder, `color:${addedColor};`);
+                                                    });
+
+                                                    if (style.innerHTML !== html)
+                                                    {
+                                                        style.innerHTML = html;
+                                                    }
+                                                }
+
+                                                setTimeout(startGitStatusChecks, timeout);
+                                            }
+
+                                            exec(gitStatusCommand1, gitStatusOptions1, gitStatusCallback1);
+                                        }
                                     }
 
                                     exec(gitStatusCommand, gitStatusOptions, gitStatusCallback);
