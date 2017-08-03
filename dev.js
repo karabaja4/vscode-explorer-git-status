@@ -102,7 +102,7 @@ function injectGitFileStatus()
                                         {
                                             const files = stdout.split("\n");
 
-                                            const added = files.filter(name => { return name.startsWith("?? ") || name.startsWith("A  "); }).map(name => { return normalizePath(name); });
+                                            const added = files.filter(name => { return name.startsWith("?? ") || name.startsWith("A  ") || name.startsWith("AM "); }).map(name => { return normalizePath(name); });
                                             const modified = files.filter(name => { return name.startsWith(" M ") || name.startsWith("M  "); }).map(name => { return normalizePath(name); });
                                             const ignored = files.filter(name => { return name.startsWith("!! "); }).map(name => { return normalizePath(name); });
                                             const renamed = files.filter(name => { return name.startsWith("R  "); }).map(name => { return normalizePathClean(name.split(" -> ")[1]); });
