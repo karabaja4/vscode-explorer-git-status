@@ -12,6 +12,7 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 * 28.6.2017: Fixed a bug where plugin would not load when reopening the project.
 * 30.6.2017: Added highlighting of parent directories of modified files (as Atom does).
 * 1.7.2017: File matching is now done using full file or directory path. Before this change the directory was highlighted if it had the same name as another changed directory.
+* 11.8.2017: Update README where to find the file for VS Code 1.15
 
 # About
 
@@ -19,9 +20,12 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 
 # Installation
 
-Open the following file:
+Open the following file for VS Code < 1.15:
 
 `{VS Code directory}/resources/app/out/vs/workbench/electron-browser/workbench.main.js`
+
+Open the following file for VS Code >= 1.15:
+`{VS Code directory}/resources/app/out/vs/workbench/workbench.main.js`
 
 as an administrator (or root) in your favorite text editor (make sure to make a backup of this file beforehand).
 
