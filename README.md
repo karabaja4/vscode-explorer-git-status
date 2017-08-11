@@ -25,6 +25,7 @@ Open the following file for VS Code < 1.15:
 `{VS Code directory}/resources/app/out/vs/workbench/electron-browser/workbench.main.js`
 
 Open the following file for VS Code >= 1.15:
+
 `{VS Code directory}/resources/app/out/vs/workbench/workbench.main.js`
 
 as an administrator (or root) in your favorite text editor (make sure to make a backup of this file beforehand).
