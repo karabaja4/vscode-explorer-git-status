@@ -26,7 +26,7 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 
 This method requires VS Code 1.15.
 
-Run the following commands:
+Run the following commands as root/administrator:
 
 ```
 npm install
