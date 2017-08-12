@@ -33,7 +33,7 @@ npm install
 gulp install
 ```
 
-A gulp task will automatically locate workbench.min.js, make a backup and append the code. Done!
+A gulp task will automatically locate `workbench.min.js`, make a backup and append the code. Done!
 
 ## Manual
 
