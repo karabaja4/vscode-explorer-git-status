@@ -24,6 +24,8 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 
 ## Automatic
 
+This method requires VS Code 1.15.
+
 Run the following commands:
 
 ```
@@ -35,16 +37,11 @@ A gulp task will automatically locate workbench.min.js, make a backup and append
 
 ## Manual
 
-Open the following file for VS Code < 1.15:
+Open the following file:
 
 ```
-{VS Code directory}/resources/app/out/vs/workbench/electron-browser/workbench.main.js
-```
-
-Open the following file for VS Code >= 1.15:
-
-```
-{VS Code directory}/resources/app/out/vs/workbench/workbench.main.js
+{VS Code directory}/resources/app/out/vs/workbench/workbench.main.js (>= VS Code 1.15)
+{VS Code directory}/resources/app/out/vs/workbench/electron-browser/workbench.main.js (< VS Code 1.15)
 ```
 
 as an administrator (or root) in your favorite text editor (make sure to make a backup of this file beforehand).
