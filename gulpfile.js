@@ -29,6 +29,7 @@ gulp.task('install', ['minify'], (cb) =>
                gulp.dest(path.dirname(workbench)),
                rename("workbench.main.js"),
                insert.append(code),
-               gulp.dest(path.dirname(workbench)) ]);
+               gulp.dest(path.dirname(workbench))
+            ], cb);
     });
 });
