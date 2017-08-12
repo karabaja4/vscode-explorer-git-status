@@ -10,7 +10,7 @@ const fs = require("fs");
 const minify = composer(uglifyjs, console);
 const cp = require('child_process');
 const os = require('os');
-var gutil = require('gulp-util');
+const gutil = require('gulp-util');
 
 function get_code_directory_paths(cb)
 {
