@@ -9,10 +9,12 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 
 # Change Log
 
+```
 * 28.6.2017: Fixed a bug where plugin would not load when reopening the project.
 * 30.6.2017: Added highlighting of parent directories of modified files (as Atom does).
 * 1.7.2017: File matching is now done using full file or directory path. Before this change the directory was highlighted if it had the same name as another changed directory.
 * 11.8.2017: Update README where to find the file for VS Code 1.15
+```
 
 # About
 
@@ -20,19 +22,38 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 
 # Installation
 
+## Automatic
+
+Run the following commands:
+
+```
+npm install
+gulp install
+```
+
+A gulp task will automatically locate workbench.min.js, make a backup and append the code. Done!
+
+## Manual
+
 Open the following file for VS Code < 1.15:
 
-`{VS Code directory}/resources/app/out/vs/workbench/electron-browser/workbench.main.js`
+```
+{VS Code directory}/resources/app/out/vs/workbench/electron-browser/workbench.main.js
+```
 
 Open the following file for VS Code >= 1.15:
 
-`{VS Code directory}/resources/app/out/vs/workbench/workbench.main.js`
+```
+{VS Code directory}/resources/app/out/vs/workbench/workbench.main.js
+```
 
 as an administrator (or root) in your favorite text editor (make sure to make a backup of this file beforehand).
 
 Copy the code from `dist.min.js` to the **end of the file** and restart Visual Studio Code. Done!
 
-You will need to repeat this process on every Visual Studio Code update as `workbench.main.js` will be replaced with a newer version.
+## Notes
+
+You will need to repeat the installation process on every Visual Studio Code update as `workbench.main.js` will be replaced with a newer version.
 
 After installation you will get a warning that your Visual Studio Code installation is corrupt:
 
