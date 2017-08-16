@@ -10,7 +10,8 @@
       "gulp-rename": "^1.2.2",
       "path": "^0.12.7",
       "gulp-insert": "^0.5.0",
-      "gulp-util": "^3.0.8"
+      "gulp-util": "^3.0.8",
+      "read-last-lines": "^1.2.0"
     }
   }
   

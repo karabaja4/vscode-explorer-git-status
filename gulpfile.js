@@ -1,4 +1,3 @@
-
 const gulp = require("gulp");
 const uglifyjs = require("uglify-es");
 const composer = require("gulp-uglify/composer");
@@ -8,112 +7,70 @@ const path = require("path");
 const insert = require("gulp-insert");
 const fs = require("fs");
 const minify = composer(uglifyjs, console);
-const cp = require('child_process');
-const os = require('os');
 const gutil = require('gulp-util');
+const lines = require('read-last-lines');
 
-function get_code_directory_paths(cb)
+function get_workbench_path(callback)
 {
-    const fail = new Error("Could not locate Code binary. Please install the script manually.");
-    const windows = () =>
+    const resourcesPaths = [
+        "C:\\Program Files\\Microsoft VS Code\\resources", // win64
+        "C:\\Program Files (x86)\\Microsoft VS Code\\resources", //win32
+        "/Applications/Visual Studio Code.app/Contents/Resources", // mac
+        "/usr/share/code/resources" // linux
+    ];
+
+    const potentials = [];
+    resourcesPaths.forEach(x =>
     {
-        cp.exec("where code", (error, stdout, stderr) => // windows
+        potentials.push(path.join(x, "/app/out/vs/workbench/workbench.main.js"));
+    });
+
+    const processing = potentials.slice();
+    let found = false;
+
+    const accessed = (err, workbench) =>
+    {
+        if (!found)
         {
-            if (error || stderr || !stdout)
+            if (!err)
             {
-                cb(fail, null);
-            }
-            else
-            {
-                // C:\Users\igors>where Code
-                // C:\Program Files\Microsoft VS Code\bin\code
-                // C:\Program Files\Microsoft VS Code\bin\code.cmd
-                cb(null, stdout.split(/\r?\n/).filter(i => i).map(i => path.dirname(path.dirname(i))));
-            }
-        });
-    }
-
-    const linux = () =>
-    {
-        cp.exec("whereis code", (error, stdout, stderr) => // linux, mac
-        {
-            if (error || stderr || !stdout)
-            {
-                cb(fail, null);
-            }
-            else
-            {
-                // dev@devbian:~/vscode-explorer-git-status$ whereis code
-                // code: /usr/bin/code /usr/share/code
-                cb(null, stdout.split(/\s+/).map(i => i.replace("code:", "")).filter(i => i));
-            }
-        });
-    }
-
-    if (os.platform() === "win32")
-    {
-        windows();
-    }
-    else
-    {
-        linux();
-    }
-}
-
-function get_workbench_path(cb)
-{
-    const fail = new Error("Could not locate workbench.main.js or you do not have sufficient permissions.");
-    get_code_directory_paths((err, dirs) =>
-    {
-        if (!err)
-        {
-            let called = false;
-            let processing = dirs.slice();
-
-            dirs.forEach(dir =>
-            {
-                const workbench = path.join(dir, "/resources/app/out/vs/workbench/workbench.main.js");
-                const callback = (err, wb) =>
+                found = true;
+                lines.read(workbench, 1).then((line) =>
                 {
-                    if (!called)
+                    if (line.startsWith("function injectGitFileStatus()"))
                     {
-                        called = true;
-                        cb(err, wb);
-                    }
-                };
-
-                const accessed = (err) =>
-                {
-                    if (!err)
-                    {
-                        callback(err, workbench);
+                        callback(new Error("vscode-explorer-git-status is already installed."), null);
                     }
                     else
                     {
-                        processing.pop();
-                        if (processing.length == 0)
-                        {
-                            callback(fail, null);
-                        }
+                        callback(err, workbench);
                     }
-                };
+                });
+            }
+            else
+            {
+                processing.pop();
+                if (processing.length == 0)
+                {
+                    found = true;
+                    callback(new Error("Could not locate workbench.main.js or you do not have sufficient permissions.", null));
+                }
+            }
+        }
+    };
 
-                fs.access(workbench, fs.constants.R_OK | fs.constants.W_OK, accessed);
-            });
-        }
-        else
-        {
-            cb(err, null);
-        }
+    potentials.forEach(x =>
+    {
+        fs.access(x, fs.constants.R_OK | fs.constants.W_OK, (err) => accessed(err, x));
     });
 }
 
-gulp.task("minify", (cb) =>
+gulp.task("minify", (callback) =>
 {
-    pump([ gulp.src("dev.js"), minify(), rename("dist.min.js"), gulp.dest("./") ], cb);
+    pump([ gulp.src("dev.js"), minify(), rename("dist.min.js"), gulp.dest("./") ], callback);
 });
 
-gulp.task("install", ["minify"], (cb) =>
+gulp.task("install", ["minify"], (callback) =>
 {
     get_workbench_path((err, workbench) =>
     {
@@ -128,11 +85,11 @@ gulp.task("install", ["minify"], (cb) =>
                     rename("workbench.main.js"),
                     insert.append(code),
                     gulp.dest(path.dirname(workbench))
-            ], cb);
+            ], callback);
         }
         else
         {
-            cb(err);
+            callback(err);
         }
     });
 });
