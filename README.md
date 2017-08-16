@@ -25,7 +25,7 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 
 ## Automatic
 
-This method requires VS Code 1.15.
+This method requires VS Code 1.15 and VS Code installed in the default installation directory. Otherwise, use the manual method.
 
 Run the following commands:
 
