@@ -17,7 +17,7 @@ function get_workbench_path(callback)
         "C:\\Program Files (x86)\\Microsoft VS Code\\resources", //win32
         "/Applications/Visual Studio Code.app/Contents/Resources", // mac
         "/usr/share/code/resources", // linux
-	    "/opt/visual-studio-code/resources/" // arch linux
+        "/opt/visual-studio-code/resources/" // arch linux
     ];
 
     const potentials = [];
