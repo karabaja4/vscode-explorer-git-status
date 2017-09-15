@@ -7,16 +7,6 @@ Screenshot:
 
 You can modify the colors inside the `dist.min.js` source, or modify them in `dev.js` and reminify the file.
 
-# Change Log
-
-```
-28.6.2017: Fixed a bug where plugin would not load when reopening the project.
-30.6.2017: Added highlighting of parent directories of modified files (as Atom does).
-1.7.2017: File matching is now done using full file or directory path. Before this change the directory was highlighted if it had the same name as another changed directory.
-11.8.2017: Update README where to find the file for VS Code >= 1.15.
-12.8.2017: Added automatic installation method.
-```
-
 # About
 
 **WARNING**: This is NOT an extension. Because this code is basically a hack that modifies Visual Studio Code's GUI, it has to manually be appended to Visual Studio Code's internal files which is not officially supported and not recommended for novice users. If you don't feel comfortable modifying Visual Studio Code's internal files please don't use this. I am not responsible for any damage.
