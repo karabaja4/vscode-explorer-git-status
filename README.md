@@ -13,7 +13,7 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 28.6.2017: Fixed a bug where plugin would not load when reopening the project.
 30.6.2017: Added highlighting of parent directories of modified files (as Atom does).
 1.7.2017: File matching is now done using full file or directory path. Before this change the directory was highlighted if it had the same name as another changed directory.
-11.8.2017: Update README where to find the file for VS Code 1.15.
+11.8.2017: Update README where to find the file for VS Code >= 1.15.
 12.8.2017: Added automatic installation method.
 ```
 
@@ -25,7 +25,7 @@ You can modify the colors inside the `dist.min.js` source, or modify them in `de
 
 ## Automatic
 
-This method requires VS Code **1.15** installed in the default installation directory. Otherwise, use the manual method.
+This method requires VS Code **>= 1.15** installed in the default installation directory. Otherwise, use the manual method.
 
 Run the following commands:
 
