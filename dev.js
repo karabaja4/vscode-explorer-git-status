@@ -44,53 +44,56 @@ function injectGitFileStatus() {
     const ignoredOpacity = "0.4";
     const style = document.createElement("style");
     document.body.appendChild(style);
-    
-    
+
+
     const classPath = "#workbench\\.view\\.explorer .explorer-folders-view .monaco-tree .monaco-tree-rows .monaco-tree-row .explorer-item";
-    
-    const getCssEntry = (root, file, cssEntry) => {
+
+    const getCssEntry = (root, file, cssEntry, rec) => {
         const filepath = unresolveHome(path.join(root, file).replace(/\\/g, "\\\\"));
+        if(rec)
+            return `${classPath}[title^="${filepath}" i]{${cssEntry}}` + '\r\n';
         return `${classPath}[title="${filepath}" i]{${cssEntry}}` + '\r\n';
     }
-    
+
     async function getGitRoot(firstFileDir) {
         const gitRootCommand = "git rev-parse --show-toplevel";
         const gitRootOptions = { cwd: resolveHome(firstFileDir) };
-        
+
         return new Promise((resolve, reject) => {
             exec(gitRootCommand, gitRootOptions, (error, stdout, stderr) => error ? reject(error) : resolve(stdout.trim()));
         })
     }
-    
+
     let preGitRoot, preGitStatus;
 
     async function getGitStatus(gitRoot) {
         const gitStatusCommand = "git status --short --ignored";
         const gitStatusOptions = { cwd: resolveHome(gitRoot) }
 
-        return new Promise((resolve, reject) => {
-            exec(gitStatusCommand, gitStatusOptions, (error, stdout, stderr) => {
-                if (!error) {
-                    const files = stdout.split("\n");
-
-                    const added = files
-                        .filter(name => name.startsWith("?? "))
-                        .map(name => normalizePath(name));
-                        
-                    const modified = files
-                        .filter(name => name.startsWith(" M "))
-                        .map(name => normalizePath(name));
-
-                    const ignored = files
-                        .filter(name => name.startsWith("!! "))
-                        .map(name => normalizePath(name));
-
-                    resolve({ added, modified, ignored, stdout })
-                } else {
-                    reject(error)
-                }
-            });
+        const stdout = await new Promise((resolve, reject) => {
+            exec(
+                gitStatusCommand,
+                gitStatusOptions,
+                (error, stdout, stderr) => error ? reject(error) : resolve(stdout)
+            )
         })
+
+        const files = stdout.split("\n");
+
+        const added = files
+            .filter(name => name.startsWith("?? "))
+            .map(name => normalizePath(name));
+
+        const modified = files
+            .filter(name => name.startsWith(" M "))
+            .map(name => normalizePath(name));
+
+        const ignored = files
+            .filter(name => name.startsWith("!! "))
+            .map(name => normalizePath(name));
+
+        return { added, modified, ignored, stdout }
+
     }
 
     async function run() {
@@ -106,12 +109,12 @@ function injectGitFileStatus() {
         if (explorerItem) {
 
             const firstFileDir = path.normalize(path.dirname(explorerItem.getAttribute("title")));
-            
+
             const gitRoot = preGitRoot || (preGitRoot = await getGitRoot(firstFileDir))
 
             const { added, modified, stdout } = await getGitStatus(gitRoot)
 
-            if(stdout == preGitStatus){
+            if (stdout == preGitStatus) {
                 setTimeout(run, timeout);
                 return
             }
@@ -128,7 +131,7 @@ function injectGitFileStatus() {
                 for (let subdir of getAllSubdirectories(file))
                     addedFolders.add(subdir)
 
-                html += getCssEntry(gitRoot, file, `color:${addedColor};`);
+                html += getCssEntry(gitRoot, file, `color:${addedColor};`,true);
             }
 
             for (let file of modified) {
