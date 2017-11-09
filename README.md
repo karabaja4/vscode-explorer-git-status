@@ -1,3 +1,6 @@
+# Deprecated
+Visual Studio Code 1.18 now includes this feature out of the box. This repo is now deprecated and won't receive any more updates.
+
 # vscode-explorer-git-status
 Highlighting of git added, modified and ignored files inside Visual Studio Code File Explorer (similar to Atom).
 
